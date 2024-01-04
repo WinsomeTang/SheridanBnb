@@ -11,6 +11,7 @@
 		F2FD627F2B47368D006E8FDA /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2FD627E2B47368D006E8FDA /* ContentView.swift */; };
 		F2FD62812B47368F006E8FDA /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F2FD62802B47368F006E8FDA /* Assets.xcassets */; };
 		F2FD62842B47368F006E8FDA /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F2FD62832B47368F006E8FDA /* Preview Assets.xcassets */; };
+		F2FD628B2B474C7D006E8FDA /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F2FD628A2B474C7D006E8FDA /* GoogleService-Info.plist */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -19,6 +20,7 @@
 		F2FD627E2B47368D006E8FDA /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		F2FD62802B47368F006E8FDA /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		F2FD62832B47368F006E8FDA /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		F2FD628A2B474C7D006E8FDA /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 		F2FD627B2B47368D006E8FDA /* SheridanBnb */ = {
 			isa = PBXGroup;
 			children = (
+				F2FD628A2B474C7D006E8FDA /* GoogleService-Info.plist */,
 				F2FD627C2B47368D006E8FDA /* SheridanBnbApp.swift */,
 				F2FD627E2B47368D006E8FDA /* ContentView.swift */,
 				F2FD62802B47368F006E8FDA /* Assets.xcassets */,
@@ -127,6 +130,7 @@
 			files = (
 				F2FD62842B47368F006E8FDA /* Preview Assets.xcassets in Resources */,
 				F2FD62812B47368F006E8FDA /* Assets.xcassets in Resources */,
+				F2FD628B2B474C7D006E8FDA /* GoogleService-Info.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -269,10 +273,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SheridanBnb/Preview Content\"";
-				DEVELOPMENT_TEAM = M46W996KF7;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = M46W996KF7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -287,6 +293,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wt.SheridanBnb;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = SheridanBnb;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -298,10 +306,12 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
-				CODE_SIGN_STYLE = Automatic;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"SheridanBnb/Preview Content\"";
-				DEVELOPMENT_TEAM = M46W996KF7;
+				DEVELOPMENT_TEAM = "";
+				"DEVELOPMENT_TEAM[sdk=iphoneos*]" = M46W996KF7;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -316,6 +326,8 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.wt.SheridanBnb;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=iphoneos*]" = SheridanBnb;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
