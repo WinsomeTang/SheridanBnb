@@ -6,11 +6,11 @@
 //
 
 import SwiftUI
-import FirebaseCore
-
+import Firebase
 
 @main
 struct SheridanBnbApp: App {
+    let displayViewModel = DisplayViewModel()
     init(){
         FirebaseApp.configure()
         print("firebase configuration complete!")
@@ -19,6 +19,7 @@ struct SheridanBnbApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(displayViewModel)
         }
     }
 }
