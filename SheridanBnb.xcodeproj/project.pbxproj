@@ -74,11 +74,11 @@
 		F2FD627B2B47368D006E8FDA /* SheridanBnb */ = {
 			isa = PBXGroup;
 			children = (
+				F8153AB22B4887470002E5D5 /* Views */,
 				F2FD629F2B479CB5006E8FDA /* ViewModels */,
 				F2FD629B2B479A9F006E8FDA /* Models */,
 				F2FD628A2B474C7D006E8FDA /* GoogleService-Info.plist */,
 				F2FD627C2B47368D006E8FDA /* SheridanBnbApp.swift */,
-				F2FD627E2B47368D006E8FDA /* ContentView.swift */,
 				F2FD62802B47368F006E8FDA /* Assets.xcassets */,
 				F2FD62822B47368F006E8FDA /* Preview Content */,
 			);
@@ -114,6 +114,14 @@
 			children = (
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F8153AB22B4887470002E5D5 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				F2FD627E2B47368D006E8FDA /* ContentView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
