@@ -18,7 +18,7 @@ struct SheridanBnbApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            MainEntryView()
                 .environmentObject(displayViewModel)
         }
     }

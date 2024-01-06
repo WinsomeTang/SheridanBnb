@@ -26,59 +26,93 @@ struct ContentView: View {
     }
 
     var body: some View {
-        NavigationView {
-            VStack {
-                SearchBar(text: $searchText)
-                    .padding()
+        // The main stack for the entire screen
+        VStack(spacing: 0) {
+            // The blue section at the top including the "Sheridan BNB" title and the search bar
+            ZStack {
+//                Color("Blue")
+//                    .edgesIgnoringSafeArea(.all)
 
-                Text("Available Classrooms")
-                    .font(.headline)
-                    .padding()
+                VStack {
+                    Text("Sheridan BNB")
+                        .font(.largeTitle)
+                        .foregroundColor(.white)
+                        .frame(maxWidth: .infinity)
+                        .padding(.top, 5)
 
-                Button("Filter") {
-                    isFilterViewPresented.toggle()
-                }
-                .buttonStyle(WingButtonStyle())
-                .sheet(isPresented: $isFilterViewPresented) {
-                    FilterView(selectedWingIndex: $selectedWingIndex, wingIDs: displayViewModel.wingIDs, onApply: {
-                        if selectedWingIndex == 0 {
-                            selectedWing = "All"
-                            displayViewModel.fetchClassroomsFromFirestore()
-                        } else {
-                            selectedWing = displayViewModel.wingIDs[selectedWingIndex]
-                            displayViewModel.fetchFilteredClassrooms(for: selectedWing ?? "")
+                    HStack {
+                        SearchBar(text: $searchText)
+                            .padding()
+                        Button {
+                            isFilterViewPresented.toggle()
+                        } label: {
+                            Image(systemName: "slider.horizontal.3")
                         }
-                        isFilterViewPresented.toggle()
-                    })
-                    .environmentObject(displayViewModel)
+                        .offset(x: -20)
+                        .buttonStyle(WingButtonStyle())
+                        .sheet(isPresented: $isFilterViewPresented) {
+                            FilterView(selectedWingIndex: $selectedWingIndex, wingIDs: displayViewModel.wingIDs, onApply: {
+                                if selectedWingIndex == 0 {
+                                    selectedWing = "All"
+                                } else {
+                                    selectedWing = displayViewModel.wingIDs[selectedWingIndex]
+                                }
+                                displayViewModel.fetchClassroomsFromFirestore()
+                                isFilterViewPresented.toggle()
+                            })
+                            .environmentObject(displayViewModel)
+                        }
+                    }
                 }
+                .padding(.bottom)
+            }
+            .background(Color("Blue"))
 
-                List(filteredClassrooms.sorted {
-                    $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending
-                }) { classroom in
-                    Text("\(classroom.classroomID) in Wing \(classroom.wingID)")
+            // This VStack will contain the list and will have the light green background
+            VStack(spacing: 0) { // No spacing between elements inside this VStack
+                List {
+                    ForEach(filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }) { classroom in
+                        VStack(alignment: .leading) {
+                            Text("\(classroom.classroomID) in Wing \(classroom.wingID)")
+                                .padding()
+                                .background(Color.white)
+                                .cornerRadius(10)
+                                .font(.system(size: 22))
+                                .fontWeight(.bold)
+                                .foregroundColor(Color("Blue"))
+                                .frame(maxWidth: .infinity, alignment: .center)
+                        }
+                        .padding(.vertical, 16)
+                        .background(Color("White"))
+                        .cornerRadius(10)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color("Light Green"), lineWidth: 15)
+                        )
+                        // Remove default padding
+                        .listRowInsets(EdgeInsets())
+                    }
                 }
+                .listStyle(PlainListStyle())
+                .padding(.horizontal, 15)
+                .background(Color("Light Green"))
             }
-            .navigationBarTitle("Sheridan Bnb", displayMode: .large)
-            .onAppear {
-                displayViewModel.fetchClassroomsFromFirestore()
-            }
+            .padding(.top, 15)
+            .background(Color("Light Green"))
+        }
+        .edgesIgnoringSafeArea(.bottom)
+        .onAppear {
+            displayViewModel.fetchClassroomsFromFirestore()
         }
     }
 }
-
-
-                
-
-                
-
 
 // Define a button style for wing buttons
 struct WingButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding()
-            .background(Color.blue)
+            .background(Color("Aqua"))
             .foregroundColor(.white)
             .clipShape(Capsule())
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
@@ -88,7 +122,7 @@ struct WingButtonStyle: ButtonStyle {
 struct ClassroomsView: View {
     @EnvironmentObject var displayViewModel: DisplayViewModel
     var wingID: String
-    
+
     var body: some View {
         List(displayViewModel.availableClassrooms) { classroom in
             Text("\(classroom.classroomID) in Wing \(classroom.wingID)")

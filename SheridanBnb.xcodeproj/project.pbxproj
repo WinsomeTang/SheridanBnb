@@ -24,6 +24,8 @@
 		F2FD62A62B47A38C006E8FDA /* FirebaseFirestoreSwift in Frameworks */ = {isa = PBXBuildFile; productRef = F2FD62A52B47A38C006E8FDA /* FirebaseFirestoreSwift */; };
 		F2FD62AA2B48C3D2006E8FDA /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2FD62A92B48C3D2006E8FDA /* SearchBar.swift */; };
 		F2FD62AC2B48C66D006E8FDA /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F2FD62AB2B48C66D006E8FDA /* FilterView.swift */; };
+		F8153AB82B49E0C80002E5D5 /* MainEntryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8153AB72B49E0C80002E5D5 /* MainEntryView.swift */; };
+		F8153ABA2B49EA4F0002E5D5 /* Wave.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8153AB92B49EA4F0002E5D5 /* Wave.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -37,6 +39,8 @@
 		F2FD62A02B479CD3006E8FDA /* DisplayViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayViewModel.swift; sourceTree = "<group>"; };
 		F2FD62A92B48C3D2006E8FDA /* SearchBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
 		F2FD62AB2B48C66D006E8FDA /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
+		F8153AB72B49E0C80002E5D5 /* MainEntryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainEntryView.swift; sourceTree = "<group>"; };
+		F8153AB92B49EA4F0002E5D5 /* Wave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Wave.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				F2FD629C2B479AC2006E8FDA /* Classroom.swift */,
+				F8153AB92B49EA4F0002E5D5 /* Wave.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -126,6 +131,7 @@
 				F2FD627E2B47368D006E8FDA /* ContentView.swift */,
 				F2FD62A92B48C3D2006E8FDA /* SearchBar.swift */,
 				F2FD62AB2B48C66D006E8FDA /* FilterView.swift */,
+				F8153AB72B49E0C80002E5D5 /* MainEntryView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -214,10 +220,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F8153ABA2B49EA4F0002E5D5 /* Wave.swift in Sources */,
 				F2FD627F2B47368D006E8FDA /* ContentView.swift in Sources */,
 				F2FD627D2B47368D006E8FDA /* SheridanBnbApp.swift in Sources */,
 				F2FD629D2B479AC2006E8FDA /* Classroom.swift in Sources */,
 				F2FD62A12B479CD3006E8FDA /* DisplayViewModel.swift in Sources */,
+				F8153AB82B49E0C80002E5D5 /* MainEntryView.swift in Sources */,
 				F2FD62AC2B48C66D006E8FDA /* FilterView.swift in Sources */,
 				F2FD62AA2B48C3D2006E8FDA /* SearchBar.swift in Sources */,
 			);
