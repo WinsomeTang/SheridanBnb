@@ -11,40 +11,48 @@ import FirebaseFirestore
 struct ContentView: View {
     @EnvironmentObject var displayViewModel: DisplayViewModel
     @State private var selectedWing: String?
-    
+    @State private var searchText: String = ""
+    @State private var isFilterViewPresented = false
+    @State private var selectedWingIndex: Int = 0
+
     var filteredClassrooms: [IdentifiableClassroom] {
+        let filteredBySearch = searchText.isEmpty ? displayViewModel.availableClassrooms : displayViewModel.availableClassrooms.filter { $0.classroomID.lowercased().contains(searchText.lowercased()) }
+
         if let selectedWing = selectedWing, selectedWing != "All" {
-            return displayViewModel.availableClassrooms.filter { $0.wingID == selectedWing }
+            return filteredBySearch.filter { $0.wingID == selectedWing }
         } else {
-            return displayViewModel.availableClassrooms
+            return filteredBySearch
         }
     }
 
     var body: some View {
         NavigationView {
             VStack {
+                SearchBar(text: $searchText)
+                    .padding()
+
                 Text("Available Classrooms")
                     .font(.headline)
                     .padding()
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    HStack {
-                        ForEach(displayViewModel.wingIDs, id: \.self) { wingID in
-                            Button(wingID) {
-                                self.selectedWing = wingID
-                                if wingID == "All" {
-                                    // Call fetchClassroomsFromFirestore without arguments
-                                    displayViewModel.fetchClassroomsFromFirestore()
-                                } else {
-                                    // Fetch filtered classrooms for the selected wing
-                                    displayViewModel.fetchFilteredClassrooms(for: wingID)
-                                }
-                            }
-                            .buttonStyle(WingButtonStyle())
-                        }
-                    }
+                Button("Filter") {
+                    isFilterViewPresented.toggle()
                 }
-                
+                .buttonStyle(WingButtonStyle())
+                .sheet(isPresented: $isFilterViewPresented) {
+                    FilterView(selectedWingIndex: $selectedWingIndex, wingIDs: displayViewModel.wingIDs, onApply: {
+                        if selectedWingIndex == 0 {
+                            selectedWing = "All"
+                            displayViewModel.fetchClassroomsFromFirestore()
+                        } else {
+                            selectedWing = displayViewModel.wingIDs[selectedWingIndex]
+                            displayViewModel.fetchFilteredClassrooms(for: selectedWing ?? "")
+                        }
+                        isFilterViewPresented.toggle()
+                    })
+                    .environmentObject(displayViewModel)
+                }
+
                 List(filteredClassrooms.sorted {
                     $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending
                 }) { classroom in
@@ -58,6 +66,12 @@ struct ContentView: View {
         }
     }
 }
+
+
+                
+
+                
+
 
 // Define a button style for wing buttons
 struct WingButtonStyle: ButtonStyle {
