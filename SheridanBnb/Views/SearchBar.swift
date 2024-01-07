@@ -10,9 +10,9 @@ struct SearchBar: View {
             TextField("Search a room...", text: $text, onEditingChanged: { isEditing in
                 onEditingChanged?(isEditing)
             })
-                .font(.system(size: 22))
+                .font(.system(size: 20))
                 .fontWeight(.medium)
-                .padding(20)
+                .padding(10)
                 .padding(.horizontal, 25)
                 .foregroundColor(Color("Aqua"))
                 .background(Color.white)
@@ -22,7 +22,7 @@ struct SearchBar: View {
                         Image(systemName: "magnifyingglass")
                             .scaledToFill()
                             .foregroundColor(Color.gray)
-                            .padding(.leading, 15)
+                            .padding(.leading, 10)
                         
                         Spacer()
                         
@@ -37,9 +37,10 @@ struct SearchBar: View {
                         }
                     }
                 )
-                .padding(.horizontal, 10)
+                .padding(.horizontal, 20)
         }
         .padding(.vertical, 20)
+        .padding(.horizontal, 10)
     }
 }
 
