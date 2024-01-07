@@ -34,11 +34,13 @@ struct ContentView: View {
 //                    .edgesIgnoringSafeArea(.all)
 
                 VStack {
+                   
                     Text("Sheridan BNB")
                         .font(.largeTitle)
                         .foregroundColor(.white)
                         .frame(maxWidth: .infinity)
-                        .padding(.top, 5)
+                        
+                        .padding(.top, 30)
 
                     HStack {
                         SearchBar(text: $searchText)
@@ -82,12 +84,12 @@ struct ContentView: View {
                                 .foregroundColor(Color("Blue"))
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
-                        .padding(.vertical, 16)
+                        .padding(.vertical, 30)
                         .background(Color("White"))
                         .cornerRadius(10)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color("Light Green"), lineWidth: 15)
+                            RoundedRectangle(cornerRadius: 40)
+                                .stroke(Color("Light Green"), lineWidth: 45)
                         )
                         // Remove default padding
                         .listRowInsets(EdgeInsets())
@@ -111,7 +113,7 @@ struct ContentView: View {
 struct WingButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
-            .padding()
+            .padding(20)
             .background(Color("Aqua"))
             .foregroundColor(.white)
             .clipShape(Capsule())

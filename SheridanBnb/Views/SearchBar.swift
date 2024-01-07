@@ -6,16 +6,19 @@ struct SearchBar: View {
     var body: some View {
         HStack {
             TextField("Search a room...", text: $text)
-                .padding(10)
+                .font(.system(size: 22))
+                .fontWeight(.medium)
+                .padding(20)
                 .padding(.horizontal, 25) // You might need to adjust this value based on the size of your icons.
                 .foregroundColor(Color("Aqua"))
                 .background(Color.white)
-                .cornerRadius(20)
+                .cornerRadius(40)
                 .overlay(
                     HStack {
                         Image(systemName: "magnifyingglass")
+                            .scaledToFill()
                             .foregroundColor(Color.gray)
-                            .padding(.leading, 8) // Padding to keep icon inside the border
+                            .padding(.leading, 15) // Padding to keep icon inside the border
                         
                         Spacer() // This will push the magnifying glass to the left and the clear button to the right
                         
@@ -32,7 +35,7 @@ struct SearchBar: View {
                 )
                 .padding(.horizontal, 10) // Padding for the entire search bar
         }
-        .padding(.vertical, 10)
+        .padding(.vertical, 20)
     }
 }
 
