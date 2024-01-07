@@ -5,38 +5,51 @@
 //  Created by Winsome Tang on 2024-01-05.
 //
 
-// FilterView.swift
 import SwiftUI
+
 struct FilterView: View {
     @EnvironmentObject var displayViewModel: DisplayViewModel
-    @Binding var selectedWingIndex: Int // Use index instead of String?
-    var wingIDs: [String]
-    var onApply: () -> Void
+    @Binding var isPresented: Bool
+
+    var wingIDs: [String] = ["A", "B", "C", "E", "G", "J", "S", "ALL"]
+    
+    
 
     var body: some View {
         VStack {
-            Text("Filter by Wing")
+            Text("Select a wing")
                 .font(.headline)
                 .padding()
 
-            Picker("Select Wing", selection: $selectedWingIndex) {
-                // Option for All Wings
-                ForEach(0..<wingIDs.count, id: \.self) { index in
-                    Text(wingIDs[index]).tag(index)
+            // Grid of buttons
+            LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
+                ForEach(wingIDs, id: \.self) { wingID in
+                    Button(action: {
+//                        self.buttonTapped(with: wingID)
+                        buttonTapped(with: wingID)
+                    }) {
+                        Text(wingID)
+                            .frame(maxWidth: .infinity)
+                            .padding()
+                            .background(Color.blue)
+                            .foregroundColor(.white)
+                            .cornerRadius(10)
+                    }
                 }
             }
-            .pickerStyle(MenuPickerStyle())
-
-            Button("Apply") {
-                onApply()
-            }
-            .buttonStyle(WingButtonStyle())
         }
         .padding()
     }
+    func buttonTapped(with wing: String) {
+        displayViewModel.selectedWing = wing == "ALL" ? nil : wing
+        isPresented = false
+    }
 }
 
-//
-//#Preview {
-//    FilterView()
-//}
+
+struct FilterView_Previews: PreviewProvider {
+    static var previews: some View {
+        FilterView(isPresented: .constant(true))
+            .environmentObject(DisplayViewModel())
+    }
+}

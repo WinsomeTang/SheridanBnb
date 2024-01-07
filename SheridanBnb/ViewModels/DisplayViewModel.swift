@@ -11,6 +11,13 @@ class DisplayViewModel: ObservableObject {
     @Published var wings: [Wing] = []
     @Published var availableClassrooms: [IdentifiableClassroom] = []
     @Published var wingIDs: [String] = ["All"]
+    @Published var selectedWing: String? {
+        didSet {
+            fetchFilteredClassrooms(for: selectedWing)
+        }
+    }
+    @Published var searchText = ""
+    
     
     func sortedClassrooms(wingID: String?) -> [IdentifiableClassroom] {
         var classroomsToSort = wingID == nil ? availableClassrooms : availableClassrooms.filter { $0.wingID == wingID }
@@ -55,7 +62,7 @@ class DisplayViewModel: ObservableObject {
         }
     }
 
-    func fetchFilteredClassrooms(for wingID: String) {
+    func fetchFilteredClassrooms(for wingID: String?) {
         // Assuming decodeWingsDocument has already populated the wings with the appropriate data
         // This function will filter available classrooms for a specific wing
         let currentDate = Date()
@@ -76,6 +83,7 @@ class DisplayViewModel: ObservableObject {
             .sorted {
                 $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending
             }
+        availableClassrooms = filterAvailableClassrooms(for: selectedWing)
     }
 
 

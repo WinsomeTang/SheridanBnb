@@ -2,14 +2,18 @@ import SwiftUI
 
 struct SearchBar: View {
     @Binding var text: String
+    var onEditingChanged: ((Bool) -> Void)? = nil
+
 
     var body: some View {
         HStack {
-            TextField("Search a room...", text: $text)
+            TextField("Search a room...", text: $text, onEditingChanged: { isEditing in
+                onEditingChanged?(isEditing)
+            })
                 .font(.system(size: 22))
                 .fontWeight(.medium)
                 .padding(20)
-                .padding(.horizontal, 25) // You might need to adjust this value based on the size of your icons.
+                .padding(.horizontal, 25)
                 .foregroundColor(Color("Aqua"))
                 .background(Color.white)
                 .cornerRadius(40)
@@ -18,9 +22,9 @@ struct SearchBar: View {
                         Image(systemName: "magnifyingglass")
                             .scaledToFill()
                             .foregroundColor(Color.gray)
-                            .padding(.leading, 15) // Padding to keep icon inside the border
+                            .padding(.leading, 15)
                         
-                        Spacer() // This will push the magnifying glass to the left and the clear button to the right
+                        Spacer()
                         
                         if !text.isEmpty {
                             Button(action: {
@@ -28,12 +32,12 @@ struct SearchBar: View {
                             }) {
                                 Image(systemName: "multiply.circle.fill")
                                     .foregroundColor(Color("Aqua"))
-                                    .padding(.trailing, 8) // Padding to keep icon inside the border
+                                    .padding(.trailing, 8)
                             }
                         }
                     }
                 )
-                .padding(.horizontal, 10) // Padding for the entire search bar
+                .padding(.horizontal, 10)
         }
         .padding(.vertical, 20)
     }

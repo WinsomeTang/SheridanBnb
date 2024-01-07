@@ -14,25 +14,27 @@ struct ContentView: View {
     @State private var searchText: String = ""
     @State private var isFilterViewPresented = false
     @State private var selectedWingIndex: Int = 0
-
+    
+//    var filteredClassrooms: [IdentifiableClassroom] {
+//        let filteredBySearch = searchText.isEmpty ? displayViewModel.availableClassrooms : displayViewModel.availableClassrooms.filter { $0.classroomID.lowercased().contains(searchText.lowercased()) }
+//        return displayViewModel.selectedWing == nil ? filteredBySearch : filteredBySearch.filter { $0.wingID == displayViewModel.selectedWing }
+//    }
+    
     var filteredClassrooms: [IdentifiableClassroom] {
-        let filteredBySearch = searchText.isEmpty ? displayViewModel.availableClassrooms : displayViewModel.availableClassrooms.filter { $0.classroomID.lowercased().contains(searchText.lowercased()) }
-
-        if let selectedWing = selectedWing, selectedWing != "All" {
-            return filteredBySearch.filter { $0.wingID == selectedWing }
+        if searchText.isEmpty {
+            // If there's no search text, use the classrooms based on the selected wing
+            return displayViewModel.availableClassrooms
         } else {
-            return filteredBySearch
+            // If there is search text, perform search regardless of the selected wing
+            return displayViewModel.availableClassrooms.filter {
+                $0.classroomID.lowercased().contains(searchText.lowercased())
+            }
         }
     }
 
     var body: some View {
-        // The main stack for the entire screen
         VStack(spacing: 0) {
-            // The blue section at the top including the "Sheridan BNB" title and the search bar
             ZStack {
-//                Color("Blue")
-//                    .edgesIgnoringSafeArea(.all)
-
                 VStack {
                    
                     Text("Sheridan BNB")
@@ -43,8 +45,12 @@ struct ContentView: View {
                         .padding(.top, 30)
 
                     HStack {
-                        SearchBar(text: $searchText)
-                            .padding()
+                        SearchBar(text: $searchText, onEditingChanged: { isEditing in
+                            if isEditing {
+                                displayViewModel.selectedWing = nil
+                            }
+                        })
+
                         Button {
                             isFilterViewPresented.toggle()
                         } label: {
@@ -53,16 +59,8 @@ struct ContentView: View {
                         .offset(x: -20)
                         .buttonStyle(WingButtonStyle())
                         .sheet(isPresented: $isFilterViewPresented) {
-                            FilterView(selectedWingIndex: $selectedWingIndex, wingIDs: displayViewModel.wingIDs, onApply: {
-                                if selectedWingIndex == 0 {
-                                    selectedWing = "All"
-                                } else {
-                                    selectedWing = displayViewModel.wingIDs[selectedWingIndex]
-                                }
-                                displayViewModel.fetchClassroomsFromFirestore()
-                                isFilterViewPresented.toggle()
-                            })
-                            .environmentObject(displayViewModel)
+                            FilterView(isPresented: $isFilterViewPresented)
+                                .environmentObject(displayViewModel)
                         }
                     }
                 }
@@ -85,19 +83,26 @@ struct ContentView: View {
                                 .frame(maxWidth: .infinity, alignment: .center)
                         }
                         .padding(.vertical, 30)
-                        .background(Color("White"))
+                        .background(Color.white)
                         .cornerRadius(10)
                         .overlay(
                             RoundedRectangle(cornerRadius: 40)
                                 .stroke(Color("Light Green"), lineWidth: 45)
                         )
-                        // Remove default padding
                         .listRowInsets(EdgeInsets())
+                        .listRowSeparator(.hidden)
                     }
                 }
                 .listStyle(PlainListStyle())
                 .padding(.horizontal, 15)
                 .background(Color("Light Green"))
+                .dismissKeyboardOnDrag()
+                .simultaneousGesture(DragGesture().onChanged { _ in
+                    UIApplication.shared.dismissKeyboard()
+                })
+//                .onTapGesture {
+//                    UIApplication.shared.dismissKeyboard()
+//                }
             }
             .padding(.top, 15)
             .background(Color("Light Green"))
@@ -105,6 +110,9 @@ struct ContentView: View {
         .edgesIgnoringSafeArea(.bottom)
         .onAppear {
             displayViewModel.fetchClassroomsFromFirestore()
+        }
+        .onChange(of: displayViewModel.selectedWing) { newWing in
+            displayViewModel.fetchFilteredClassrooms(for: newWing)
         }
     }
 }
@@ -133,9 +141,35 @@ struct ClassroomsView: View {
     }
 }
 
+struct DismissKeyboardOnDrag: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .onTapGesture {
+                UIApplication.shared.dismissKeyboard()
+            }
+            .gesture(DragGesture().onChanged { _ in
+                UIApplication.shared.dismissKeyboard()
+            })
+    }
+}
+
+#if canImport(UIKit)
+extension UIApplication {
+    func dismissKeyboard() {
+        sendAction(#selector(UIResponder.resignFirstResponder), to: nil, from: nil, for: nil)
+    }
+    
+}
+#endif
+
+extension View {
+    func dismissKeyboardOnDrag() -> some View {
+        self.modifier(DismissKeyboardOnDrag())
+    }
+}
+
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView().environmentObject(DisplayViewModel())
     }
 }
-
