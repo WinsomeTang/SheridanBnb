@@ -18,6 +18,41 @@ class DisplayViewModel: ObservableObject {
     }
     @Published var searchText = ""
     
+    func calculateAvailableTimeFor(classroom: Classroom, on day: String, at currentTime: String) -> String {
+        guard let daySchedule = classroom.schedule[day], !daySchedule.isEmpty else {
+            return "Free for the day"
+        }
+
+        let currentTimeDate = DateFormatter.hourMinuteFormatter.date(from: currentTime) ?? Date()
+        let sortedSchedule = daySchedule.sorted { $0.time < $1.time }
+
+        for courseTime in sortedSchedule {
+            if let startTime = DateFormatter.hourMinuteFormatter.date(from: courseTime.time.components(separatedBy: " - ").first ?? "") {
+                if startTime > currentTimeDate {
+                    let availableTime = Calendar.current.dateComponents([.hour, .minute], from: currentTimeDate, to: startTime)
+                    return "Free for \(availableTime.hour ?? 0)h \(availableTime.minute ?? 0)m"
+                }
+            }
+        }
+
+        return "No more classes today"
+    }
+    
+    func updateAvailableTimes() {
+        let currentDate = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEEE" // for the day of the week
+        let dayString = dateFormatter.string(from: currentDate)
+        
+        dateFormatter.dateFormat = "HH:mm" // for the current time
+        let currentTime = dateFormatter.string(from: currentDate)
+        
+        for index in availableClassrooms.indices {
+            let classroom = availableClassrooms[index].classroom
+            let availableTime = calculateAvailableTimeFor(classroom: classroom, on: dayString, at: currentTime)
+            availableClassrooms[index].availableTime = availableTime
+        }
+    }
     
     func sortedClassrooms(wingID: String?) -> [IdentifiableClassroom] {
         var classroomsToSort = wingID == nil ? availableClassrooms : availableClassrooms.filter { $0.wingID == wingID }
@@ -54,9 +89,21 @@ class DisplayViewModel: ObservableObject {
                 self?.availableClassrooms = self?.wings.flatMap { wing in
                     wing.classrooms.compactMap { classroomID, classroom -> IdentifiableClassroom? in
                         let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
-                        return isAvailable ? IdentifiableClassroom(wingID: wing.id, classroomID: classroomID) : nil
+                        if isAvailable {
+                            // Calculate available time and pass it to the initializer
+                            let availableTime = self?.calculateAvailableTimeFor(classroom: classroom, on: dayString, at: currentTime) ?? "Free now"
+                            return IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom, availableTime: availableTime)
+                        } else {
+                            return nil
+                        }
                     }
                 } ?? []
+//                self?.availableClassrooms = self?.wings.flatMap { wing in
+//                    wing.classrooms.compactMap { classroomID, classroom -> IdentifiableClassroom? in
+//                        let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
+//                        return isAvailable ? IdentifiableClassroom(wingID: wing.id, classroomID: classroomID) : nil
+//                    }
+//                } ?? []
                 self?.wingIDs = ["All"] + (self?.wings.map { $0.id }.sorted() ?? [])
             }
         }
@@ -77,7 +124,7 @@ class DisplayViewModel: ObservableObject {
             .flatMap { wing in
                 wing.classrooms.compactMap { classroomID, classroom -> IdentifiableClassroom? in
                     let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
-                    return isAvailable ? IdentifiableClassroom(wingID: wing.id, classroomID: classroomID) : nil
+                    return IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom)
                 }
             }
             .sorted {
@@ -104,7 +151,7 @@ class DisplayViewModel: ObservableObject {
             for (classroomID, classroom) in wing.classrooms {
                 let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
                 if isAvailable || wingID == nil { // if "All" is selected or the classroom is available
-                    classrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID))
+                    classrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom))
                 }
             }
         }
@@ -139,12 +186,12 @@ class DisplayViewModel: ObservableObject {
                     // Debug: print whether the classroom is occupied or not
                     print("Classroom \(classroomID) is \(isOccupied ? "occupied" : "available") at \(currentTime)")
                     if !isOccupied {
-                        unsortedClassrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID))
+                        unsortedClassrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom))
                     }
                 } else {
                     // Debug: print that the classroom is available as no schedule was found
                     print("Classroom \(classroomID) is available as no schedule was found for \(dayString)")
-                    unsortedClassrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID))
+                    unsortedClassrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom))
                 }
             }
         }

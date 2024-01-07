@@ -75,10 +75,14 @@ struct IdentifiableClassroom: Identifiable {
     let id: String
     let wingID: String
     let classroomID: String
+    let classroom: Classroom
+    var availableTime: String = "Calculating..."
 
-    init(wingID: String, classroomID: String) {
+    init(wingID: String, classroomID: String, classroom: Classroom, availableTime: String = "Calculating...") {
         self.wingID = wingID
         self.classroomID = classroomID
+        self.classroom = classroom // Initialize the classroom property
+        self.availableTime = availableTime
         self.id = "\(wingID)-\(classroomID)"
     }
 }

@@ -15,11 +15,6 @@ struct ContentView: View {
     @State private var isFilterViewPresented = false
     @State private var selectedWingIndex: Int = 0
     
-//    var filteredClassrooms: [IdentifiableClassroom] {
-//        let filteredBySearch = searchText.isEmpty ? displayViewModel.availableClassrooms : displayViewModel.availableClassrooms.filter { $0.classroomID.lowercased().contains(searchText.lowercased()) }
-//        return displayViewModel.selectedWing == nil ? filteredBySearch : filteredBySearch.filter { $0.wingID == displayViewModel.selectedWing }
-//    }
-    
     var filteredClassrooms: [IdentifiableClassroom] {
         if searchText.isEmpty {
             // If there's no search text, use the classrooms based on the selected wing
@@ -69,25 +64,31 @@ struct ContentView: View {
             .background(Color("Blue"))
 
             // This VStack will contain the list and will have the light green background
-            VStack(spacing: 0) { // No spacing between elements inside this VStack
+            VStack(spacing: 0) {
                 List {
                     ForEach(filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }) { classroom in
                         VStack(alignment: .leading) {
-                            Text("\(classroom.classroomID) in Wing \(classroom.wingID)")
-                                .padding()
+                            Text("\(classroom.classroomID)")
+//                                .padding()
                                 .background(Color.white)
                                 .cornerRadius(10)
                                 .font(.system(size: 22))
                                 .fontWeight(.bold)
                                 .foregroundColor(Color("Blue"))
                                 .frame(maxWidth: .infinity, alignment: .center)
+                            
+                            Text(classroom.availableTime)
+                                .font(.system(size: 18))
+                                .foregroundColor(Color.green)
+                                .fontWeight(.bold)
+                                .frame(maxWidth: .infinity, alignment: .center)
                         }
-                        .padding(.vertical, 30)
+                        .padding(.vertical, 20)
                         .background(Color.white)
                         .cornerRadius(10)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 40)
-                                .stroke(Color("Light Green"), lineWidth: 45)
+                            RoundedRectangle(cornerRadius: 20)
+                                .stroke(Color("Light Green"), lineWidth: 20)
                         )
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
@@ -113,6 +114,10 @@ struct ContentView: View {
         }
         .onChange(of: displayViewModel.selectedWing) { newWing in
             displayViewModel.fetchFilteredClassrooms(for: newWing)
+            displayViewModel.updateAvailableTimes() // Add this line
+        }
+        .onChange(of: searchText) { _ in
+            displayViewModel.updateAvailableTimes() // Add this line to handle search text changes
         }
     }
 }
