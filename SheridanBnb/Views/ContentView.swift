@@ -15,6 +15,8 @@ struct ContentView: View {
     @State private var isFilterViewPresented = false
     @State private var selectedWingIndex: Int = 0
     @State private var activeClassroomId: String? = nil
+    @State private var isFirstAppearance = true
+
     
     var filteredClassrooms: [IdentifiableClassroom] {
         if searchText.isEmpty {
@@ -125,7 +127,10 @@ struct ContentView: View {
             .edgesIgnoringSafeArea(.bottom)
             //END HERE
             .onAppear {
-                displayViewModel.fetchClassroomsFromFirestore()
+                if isFirstAppearance {
+                    displayViewModel.fetchClassroomsFromFirestore()
+                    isFirstAppearance = false
+                }
             }
             
             .onChange(of: displayViewModel.selectedWing) {

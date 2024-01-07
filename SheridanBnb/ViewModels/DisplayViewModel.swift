@@ -18,6 +18,7 @@ class DisplayViewModel: ObservableObject {
     }
     @Published var searchText = ""
     
+    
     func calculateAvailableTimeFor(classroom: Classroom, on day: String, at currentTime: String) -> String {
         guard let daySchedule = classroom.schedule[day], !daySchedule.isEmpty else {
             return "Free for the day"
