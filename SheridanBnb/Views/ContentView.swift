@@ -112,12 +112,13 @@ struct ContentView: View {
         .onAppear {
             displayViewModel.fetchClassroomsFromFirestore()
         }
-        .onChange(of: displayViewModel.selectedWing) { newWing in
-            displayViewModel.fetchFilteredClassrooms(for: newWing)
-            displayViewModel.updateAvailableTimes() // Add this line
+        
+        .onChange(of: displayViewModel.selectedWing) {
+            displayViewModel.fetchFilteredClassrooms(for: displayViewModel.selectedWing)
+            displayViewModel.updateAvailableTimes()
         }
-        .onChange(of: searchText) { _ in
-            displayViewModel.updateAvailableTimes() // Add this line to handle search text changes
+        .onChange(of: searchText) {
+            displayViewModel.updateAvailableTimes()
         }
     }
 }
