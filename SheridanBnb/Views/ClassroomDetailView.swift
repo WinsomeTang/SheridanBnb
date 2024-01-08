@@ -33,16 +33,19 @@ struct ClassroomDetailView: View {
                         HStack {
                             Capsule()
                                 .frame(width: 8, height: 40)
-                                .foregroundColor(Color.blue)
+                                .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color.blue)
                             VStack(alignment: .leading) {
                                 Text(courseTime.time)
                                     .fontWeight(.bold)
+                                    .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color.primary)
                                 Text("Course Code: \(courseTime.courseCode)")
+                                    .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color.primary)
                             }
                         }
                         .padding(.vertical, 4)
                     }
                 }
+
                 .padding()
                 .background(Color.gray.opacity(0.1))
                 .cornerRadius(10)
@@ -86,3 +89,21 @@ struct DayOfWeek {
         return dateFormatter.string(from: date)
     }
 }
+
+//Function that finds out whether a class has passed current time
+func isClassPast(courseTime: String) -> Bool {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "HH:mm"
+
+    // Split the courseTime string to get the start time
+    let times = courseTime.split(separator: "-").map(String.init)
+    guard let startTimeString = times.first,
+          let startTime = dateFormatter.date(from: startTimeString.trimmingCharacters(in: .whitespaces)),
+          let currentTime = dateFormatter.date(from: dateFormatter.string(from: Date())) else {
+        return false
+    }
+
+    // Compare current time to the start time of the class
+    return currentTime > startTime
+}
+
