@@ -1,10 +1,3 @@
-//
-//  FilterView.swift
-//  SheridanBnb
-//
-//  Created by Winsome Tang on 2024-01-05.
-//
-
 import SwiftUI
 
 struct FilterView: View {
@@ -13,33 +6,38 @@ struct FilterView: View {
 
     var wingIDs: [String] = ["A", "B", "C", "E", "G", "J", "S", "ALL"]
     
-    
-
     var body: some View {
         VStack {
             Text("Select a wing")
-                .font(.headline)
+                .font(.title)
+                .fontWeight(.bold)
                 .padding()
-
+                .foregroundColor(Color.white)
             // Grid of buttons
             LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())]) {
                 ForEach(wingIDs, id: \.self) { wingID in
                     Button(action: {
-//                        self.buttonTapped(with: wingID)
                         buttonTapped(with: wingID)
                     }) {
                         Text(wingID)
+                            .fontWeight(.bold)
                             .frame(maxWidth: .infinity)
                             .padding()
-                            .background(Color.blue)
-                            .foregroundColor(.white)
-                            .cornerRadius(10)
+                            .background(Color.white)
+                            .foregroundColor(Color("BlueTheme"))
+                            .cornerRadius(40)
                     }
                 }
+                .padding(5)
             }
+            .padding()
         }
-        .padding()
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+        .background(Color("BlueTheme"))
+        .ignoresSafeArea()
     }
+        
+        
     func buttonTapped(with wing: String) {
         displayViewModel.selectedWing = wing == "ALL" ? nil : wing
         isPresented = false

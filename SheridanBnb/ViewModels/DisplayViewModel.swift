@@ -1,9 +1,3 @@
-//
-//  DisplayViewModel.swift
-//  SheridanBnb
-//
-//  Created by Winsome Tang on 2024-01-04.
-//
 import Foundation
 import FirebaseFirestore
 
@@ -99,12 +93,6 @@ class DisplayViewModel: ObservableObject {
                         }
                     }
                 } ?? []
-//                self?.availableClassrooms = self?.wings.flatMap { wing in
-//                    wing.classrooms.compactMap { classroomID, classroom -> IdentifiableClassroom? in
-//                        let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
-//                        return isAvailable ? IdentifiableClassroom(wingID: wing.id, classroomID: classroomID) : nil
-//                    }
-//                } ?? []
                 self?.wingIDs = ["All"] + (self?.wings.map { $0.id }.sorted() ?? [])
             }
         }
@@ -124,7 +112,7 @@ class DisplayViewModel: ObservableObject {
         availableClassrooms = wings.filter { $0.id == wingID }
             .flatMap { wing in
                 wing.classrooms.compactMap { classroomID, classroom -> IdentifiableClassroom? in
-                    let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
+                    _ = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
                     return IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom)
                 }
             }
@@ -135,7 +123,6 @@ class DisplayViewModel: ObservableObject {
     }
 
 
-    // This new method will replace the resetAvailableClassrooms method
     func filterAndSortAvailableClassrooms(wingID: String?) -> [IdentifiableClassroom] {
         let currentDate = Date()
         let dateFormatter = DateFormatter()

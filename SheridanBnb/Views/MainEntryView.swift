@@ -8,36 +8,36 @@ struct MainEntryView: View {
 
             ZStack {
                 // Use the blue color from your assets for the background
-                Color("Blue")
+                Color("BlueTheme")
                     .edgesIgnoringSafeArea(.all)
                 
                 //Wave decoration starts
                 Wave(phase: phase, strength: 20, frequency: 30)
-                    .stroke(Color("Orange"), lineWidth: 45)
+                    .stroke(Color("OrangeTheme"), lineWidth: 61)
                     .rotationEffect(.degrees(230))
                     .frame(width: 1000)
-                    .offset(x: 100, y: -214)
+                    .offset(x: 100, y: -240)
                 
                 Wave(phase: phase, strength: 20, frequency: 30)
-                    .stroke(Color("Light Green"), lineWidth: 45)
+                    .stroke(Color("LightGreenTheme"), lineWidth: 61)
                     .rotationEffect(.degrees(230))
                     .frame(width: 1000)
-                    .offset(x: 140, y: -235)
+                    .offset(x: 150, y: -270)
                 Wave(phase: phase, strength: 20, frequency: 30)
-                    .stroke(Color("Aqua"), lineWidth: 47)
+                    .stroke(Color("AquaTheme"), lineWidth: 61)
                     .rotationEffect(.degrees(230))
                     .frame(width: 1000)
-                    .offset(x: 175, y: -265)
+                    .offset(x: 200.001, y: -300)
                 Wave(phase: phase, strength: 20, frequency: 30)
-                    .stroke(Color.white, lineWidth: 45)
+                    .stroke(Color("LightGreenTheme"), lineWidth: 51)
                     .rotationEffect(.degrees(230))
                     .frame(width: 1000)
-                    .offset(x:203.001, y: -300)
-                Wave(phase: phase, strength: 20, frequency: 30)
-                    .stroke(Color.white, lineWidth: 60)
-                    .rotationEffect(.degrees(230))
-                    .frame(width: 1000)
-                    .offset(x:210, y: -335)
+                    .offset(x:250, y: -325)
+//                Wave(phase: phase, strength: 20, frequency: 30)
+//                    .stroke(Color.white, lineWidth: 60)
+//                    .rotationEffect(.degrees(230))
+//                    .frame(width: 1000)
+//                    .offset(x:240, y: -335)
              //Wave ends
                 
                 VStack {
@@ -47,10 +47,9 @@ struct MainEntryView: View {
                                     .fontWeight(.heavy)
                                     .foregroundColor(Color.white)
                                     .multilineTextAlignment(.leading)
-                                    .lineSpacing(30)
+                                    .lineSpacing(21)
                                     .offset(x: -30, y: 25)
-                                    .padding()
-                                Spacer()
+                                    Spacer()
                                 Button(action: {
                                     self.isShowingContentView = true // When button is tapped, show the content view
                                 }) {

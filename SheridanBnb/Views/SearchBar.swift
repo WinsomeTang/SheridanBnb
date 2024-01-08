@@ -14,7 +14,7 @@ struct SearchBar: View {
                 .fontWeight(.medium)
                 .padding(10)
                 .padding(.horizontal, 25)
-                .foregroundColor(Color("Aqua"))
+                .foregroundColor(Color("AquaTheme"))
                 .background(Color.white)
                 .cornerRadius(40)
                 .overlay(
@@ -31,7 +31,7 @@ struct SearchBar: View {
                                 self.text = ""
                             }) {
                                 Image(systemName: "multiply.circle.fill")
-                                    .foregroundColor(Color("Aqua"))
+                                    .foregroundColor(Color("AquaTheme"))
                                     .padding(.trailing, 8)
                             }
                         }

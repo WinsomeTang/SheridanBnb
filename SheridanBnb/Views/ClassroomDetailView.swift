@@ -1,10 +1,3 @@
-//
-//  ClassroomDetailView.swift
-//  SheridanBnb
-//
-//  Created by Michael Werbowy on 2024-01-07.
-//
-
 import SwiftUI
 
 struct ClassroomDetailView: View {
@@ -14,31 +7,31 @@ struct ClassroomDetailView: View {
     
     var body: some View {
         ZStack{
-            Color("Blue")
+            Color("BlueTheme")
                 .edgesIgnoringSafeArea(.all)
             //Waves positioned on top right corner
             Wave(phase: phase, strength: 22, frequency: 50)
-                .stroke(Color("Orange"), lineWidth: 45)
+                .stroke(Color("OrangeTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: 165, y: -325)
             Wave(phase: 1.0, strength: 22, frequency: 50)
-                .stroke(Color("Light Green"), lineWidth: 45)
+                .stroke(Color("LightGreenTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: 220, y: -305)
             Wave(phase: 1.0, strength: 22, frequency: 50)
-                .stroke(Color("Aqua"), lineWidth: 45)
+                .stroke(Color("AquaTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: 390, y: -225)
             Wave(phase: 1.0, strength: 22, frequency: 50)
-                .stroke(Color("Aqua"), lineWidth: 45)
+                .stroke(Color("AquaTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: 390, y: -225)
             Wave(phase: 1.0, strength: 22, frequency: 50)
-                .stroke(Color("Blue"), lineWidth: 45)
+                .stroke(Color("BlueTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: 390, y: -255)
@@ -58,18 +51,19 @@ struct ClassroomDetailView: View {
                             .font(.title3)
                             .fontWeight(.semibold)
                             .padding(.vertical, 5)
+                            .foregroundColor(.black)
                         
                         ForEach(classroom.classroom.schedule[DayOfWeek.from(date: Date())] ?? [], id: \.id) { courseTime in
                             HStack {
                                 Capsule()
                                     .frame(width: 8, height: 40)
-                                    .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color("Aqua"))
+                                    .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color("AquaTheme"))
                                 VStack(alignment: .leading) {
                                     Text(courseTime.time)
                                         .fontWeight(.bold)
-                                        .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color("Aqua"))
+                                        .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color("AquaTheme"))
                                     Text("Course Code: \(courseTime.courseCode)")
-                                        .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color("Light Gray") :  Color("Blue"))
+                                        .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color("LightGrayTheme") :  Color("BlueTheme"))
                                 }
                             }
                             .padding(.vertical, 4)
@@ -85,23 +79,23 @@ struct ClassroomDetailView: View {
             
             //Waves positioned at bottom left corner
             Wave(phase: phase, strength: 22, frequency: 45)
-                .stroke(Color("Orange"), lineWidth: 45)
+                .stroke(Color("OrangeTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: -165, y:255)
             Wave(phase: 1.0, strength: 22, frequency: 45)
-                .stroke(Color("Light Green"), lineWidth: 45)
+                .stroke(Color("LightGreenTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: -20, y: 415)
             Wave(phase: 1.0, strength: 22, frequency: 45)
-                .stroke(Color("Aqua"), lineWidth: 45)
+                .stroke(Color("AquaTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: -50, y: 430)
 
             Wave(phase: 1.0, strength: 22, frequency: 45)
-                .stroke(Color("Blue"), lineWidth: 45)
+                .stroke(Color("BlueTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: -50, y: 450)

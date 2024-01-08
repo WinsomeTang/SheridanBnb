@@ -1,9 +1,3 @@
-//
-//  ContentView.swift
-//  SheridanBnb
-//
-//  Created by Winsome Tang on 2024-01-04.
-//
 import SwiftUI
 import Firebase
 import FirebaseFirestore
@@ -29,20 +23,27 @@ struct ContentView: View {
             }
         }
     }
-
+    
     var body: some View {
         NavigationStack{
             VStack(spacing: 0) {
                 ZStack {
                     VStack {
-                       
-                        Text("Sheridan BNB")
-                            .font(.largeTitle)
-                            .foregroundColor(.white)
-                            .frame(maxWidth: .infinity)
-                            
-                            .padding(.top, 30)
-
+                        HStack{
+                            Image(uiImage: UIImage(named: "AppIcon") ?? UIImage())
+                                .resizable()
+                                .scaledToFit()
+                                .frame(width:60, height:60)
+                                .offset(x:60, y:1)
+                            Text("Sheridan BNB")
+                               
+                                .font(.system(size: 33))
+                                .foregroundColor(.white)
+                                .frame(maxWidth: .infinity)
+                                
+                                .padding(.top, 30)
+                        }
+                        
                         HStack {
                             SearchBar(text: $searchText, onEditingChanged: { isEditing in
                                 if isEditing {
@@ -65,91 +66,98 @@ struct ContentView: View {
                     }
                     .padding(.bottom)
                 }
-                .background(Color("Blue"))
-
-                // This VStack will contain the list and will have the light green background
-                VStack(spacing: 0) {
-                    List {
-                        ForEach(filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }) { classroom in
-                            NavigationLink(destination: ClassroomDetailView(classroom: classroom), tag: classroom.classroomID, selection: $activeClassroomId) {
-                                Button(action: {
-                                    self.activeClassroomId = classroom.classroomID
-                                }) {
-                                    VStack(alignment: .leading) {
-                                        Text("\(classroom.classroomID)")
-            //                                .padding()
-                                            .background(Color.white)
-                                            .cornerRadius(10)
-                                            .font(.system(size: 22))
-                                            .fontWeight(.bold)
-                                            .foregroundColor(Color("Blue"))
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                        
-                                        Text(classroom.availableTime)
-                                            .font(.system(size: 18))
-                                            .foregroundColor(Color.green)
-                                            .fontWeight(.bold)
-                                            .frame(maxWidth: .infinity, alignment: .center)
-                                    }
-                                    .padding(.vertical, 20)
-                                    .background(Color.white)
-                                    .cornerRadius(10)
-                                    .overlay(
-                                        RoundedRectangle(cornerRadius: 20)
-                                            .stroke(Color("Light Green"), lineWidth: 20)
-                                    )
+                .background(Color("BlueTheme"))
+                    VStack(spacing: 0) {
+                        List {
+                            ForEach(filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }) { classroom in
+                                ClassroomRowView(classroom: classroom)
+                                    .padding(.vertical, 10)
+                                    .padding(.horizontal, 2)
                                     .listRowInsets(EdgeInsets())
                                     .listRowSeparator(.hidden)
-                                }
-                                .buttonStyle(PlainButtonStyle())
+                                    .listRowBackground(Color("LightGreenTheme"))
+
                             }
-                            .listRowInsets(EdgeInsets())
-                            .listRowSeparator(.hidden)
-                            .listRowBackground(Color("Light Green"))
-                            .cornerRadius(10)
-    //                        .listRowBackground(Color.white)
                         }
+                        .listStyle(PlainListStyle())
+                        .padding(.horizontal, 0)
+                        .background(Color("LightGreenTheme"))
+                        .navigationDestination(for: IdentifiableClassroom.self) { classroom in
+                            ClassroomDetailView(classroom: classroom)
+                        }
+                        .listStyle(PlainListStyle())
+                        .padding(.horizontal, 15)
+                        .background(Color("LightGreenTheme"))
+                        .dismissKeyboardOnDrag()
                     }
-                    .listStyle(PlainListStyle())
-                    .padding(.horizontal, 15)
-                    .background(Color("Light Green"))
-                    .dismissKeyboardOnDrag()
-                    .simultaneousGesture(DragGesture().onChanged { _ in
-                        UIApplication.shared.dismissKeyboard()
-                    })
-    //                .onTapGesture {
-    //                    UIApplication.shared.dismissKeyboard()
-    //                }
+                    .padding(.top, 15)
+                    .background(Color("LightGreenTheme"))
                 }
-                .padding(.top, 15)
-                .background(Color("Light Green"))
-            }
-            .edgesIgnoringSafeArea(.bottom)
-            //END HERE
-            .onAppear {
-                if isFirstAppearance {
-                    displayViewModel.fetchClassroomsFromFirestore()
-                    isFirstAppearance = false
+                .edgesIgnoringSafeArea(.bottom)
+                .onAppear {
+                    if isFirstAppearance {
+                        displayViewModel.fetchClassroomsFromFirestore()
+                        isFirstAppearance = false
+                    }
                 }
-            }
-            
-            .onChange(of: displayViewModel.selectedWing) {
-                displayViewModel.fetchFilteredClassrooms(for: displayViewModel.selectedWing)
-                displayViewModel.updateAvailableTimes()
-            }
-            .onChange(of: searchText) {
-                displayViewModel.updateAvailableTimes()
+                .onChange(of: displayViewModel.selectedWing) {
+                    displayViewModel.fetchFilteredClassrooms(for: displayViewModel.selectedWing)
+                    displayViewModel.updateAvailableTimes()
+                }
+                .onChange(of: searchText) {
+                    displayViewModel.updateAvailableTimes()
+                }
             }
         }
     }
+
+
+struct ClassroomRowView: View {
+    var classroom: IdentifiableClassroom
+
+    var body: some View {
+        NavigationLink(destination: ClassroomDetailView(classroom: classroom)) {
+            HStack {
+                VStack(alignment: .center) {
+                    Text("\(classroom.classroomID)")
+                        .font(.system(size: 22))
+                        .fontWeight(.bold)
+                        .foregroundColor(Color("BlueTheme"))
+                    
+                    Text(classroom.availableTime)
+                        .font(.system(size: 18))
+                        .foregroundColor(Color.green)
+
+                        .fontWeight(.bold)
+                }
+                .padding(13)
+                .frame(maxWidth: .infinity, alignment: .center)
+
+                Spacer()
+            }
+            .background(Color.white)
+            .cornerRadius(10)
+            .overlay(
+                RoundedRectangle(cornerRadius: 10)
+                    .stroke(Color("AquaTheme"), lineWidth: 2.5)
+            )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .foregroundColor(Color("BlueTheme"))
+        .padding(.horizontal, 0)
+        .listRowInsets(EdgeInsets())
+    }
 }
+
+
+
 
 // Define a button style for wing buttons
 struct WingButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .padding(20)
-            .background(Color("Aqua"))
+            .background(Color("AquaTheme"))
             .foregroundColor(.white)
             .clipShape(Capsule())
             .scaleEffect(configuration.isPressed ? 0.9 : 1.0)
@@ -171,9 +179,6 @@ struct ClassroomsView: View {
 struct DismissKeyboardOnDrag: ViewModifier {
     func body(content: Content) -> some View {
         content
-            .onTapGesture {
-                UIApplication.shared.dismissKeyboard()
-            }
             .gesture(DragGesture().onChanged { _ in
                 UIApplication.shared.dismissKeyboard()
             })

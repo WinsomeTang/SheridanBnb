@@ -1,9 +1,3 @@
-//
-//  Classroom.swift
-//  SheridanBnb
-//
-//  Created by Winsome Tang on 2024-01-04.
-//
 import Foundation
 import FirebaseFirestore
 
@@ -12,23 +6,29 @@ struct Wing: Identifiable, Decodable {
     var classrooms: [String: Classroom]
 }
 
-struct Classroom: Codable {
+struct Classroom: Codable, Hashable {
     var schedule: [String: [CourseTime]]
     
+    // Implementing Equatable
+    static func == (lhs: Classroom, rhs: Classroom) -> Bool {
+        lhs.schedule == rhs.schedule
+    }
+
+    // Implementing Hashable
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(schedule)
+    }
+    
     init(from decoder: Decoder) throws {
-            let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
-
-            var schedule = [String: [CourseTime]]()
-
-            for key in container.allKeys {
-                let trimmedKey = key.stringValue.trimmingCharacters(in: .punctuationCharacters)
-                let courseTimes = try container.decode([CourseTime].self, forKey: DynamicCodingKeys(stringValue: trimmedKey)!)
-                schedule[trimmedKey] = courseTimes
-            }
-
-            self.schedule = schedule
-            // Initialize any other properties as needed
+        let container = try decoder.container(keyedBy: DynamicCodingKeys.self)
+        var schedule = [String: [CourseTime]]()
+        for key in container.allKeys {
+            let trimmedKey = key.stringValue.trimmingCharacters(in: .punctuationCharacters)
+            let courseTimes = try container.decode([CourseTime].self, forKey: DynamicCodingKeys(stringValue: trimmedKey)!)
+            schedule[trimmedKey] = courseTimes
         }
+        self.schedule = schedule
+    }
 
     struct DynamicCodingKeys: CodingKey {
         var stringValue: String
@@ -43,10 +43,21 @@ struct Classroom: Codable {
     }
 }
 
-struct CourseTime: Identifiable, Codable {
-    let id: UUID = UUID()
+struct CourseTime: Identifiable, Codable, Hashable {
+    var id: UUID
     var courseCode: String
     var time: String
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        self.courseCode = try container.decode(String.self, forKey: .courseCode)
+        self.time = try container.decode(String.self, forKey: .time)
+        self.id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+    }
+
+    enum CodingKeys: String, CodingKey {
+        case id, courseCode, time
+    }
 
     func isTimeInRange(currentTime: String) -> Bool {
         let timeRange = time.components(separatedBy: " - ")
@@ -66,13 +77,13 @@ extension DateFormatter {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm"
         formatter.locale = Locale(identifier: "en_US_POSIX")
-        formatter.timeZone = TimeZone(secondsFromGMT: 0) // Adjust if you store times in UTC
+        formatter.timeZone = TimeZone(secondsFromGMT: 0)
         return formatter
     }()
 }
 
-struct IdentifiableClassroom: Identifiable {
-    let id: String
+struct IdentifiableClassroom: Identifiable, Hashable {
+    var id: String
     let wingID: String
     let classroomID: String
     let classroom: Classroom
@@ -81,7 +92,7 @@ struct IdentifiableClassroom: Identifiable {
     init(wingID: String, classroomID: String, classroom: Classroom, availableTime: String = "Calculating...") {
         self.wingID = wingID
         self.classroomID = classroomID
-        self.classroom = classroom // Initialize the classroom property
+        self.classroom = classroom
         self.availableTime = availableTime
         self.id = "\(wingID)-\(classroomID)"
     }

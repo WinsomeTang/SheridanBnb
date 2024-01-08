@@ -1,10 +1,3 @@
-//
-//  Wave.swift
-//  SheridanBnb
-//
-//  Created by Michael Werbowy on 2024-01-06.
-//
-
 import Foundation
 import SwiftUI
 
@@ -20,7 +13,7 @@ struct Wave: Shape {
         // calculate some important values up front
         let width = Double(rect.maxX)
         let height = Double(rect.maxY)
-        let midWidth = width / 2
+        _ = width / 2
         let midHeight = height / 2
 
         // split our total width up based on the frequency
@@ -43,9 +36,6 @@ struct Wave: Shape {
             // add a line to here
             path.addLine(to: CGPoint(x: x, y: y))
         }
-
         return Path(path.cgPath)
     }
 }
-
-
