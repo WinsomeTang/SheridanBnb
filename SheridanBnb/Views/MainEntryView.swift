@@ -64,14 +64,17 @@ struct MainEntryView: View {
                                             RoundedRectangle(cornerRadius: 15)
                                                 .stroke(Color.white, lineWidth: 2)
                                         )
+                                    
                                 }
                                 .fullScreenCover(isPresented: $isShowingContentView) {
                                     // Present the ContentView as a sheet
                                     ContentView().environmentObject(displayViewModel)
                                 }
                                 Spacer()
+                                Text("Made by\n Michael Werbowy + Winsome Tang")
+                        .foregroundColor(Color("AquaTheme"))
+                        .multilineTextAlignment(.center)
                             }
-
                         }
                         .navigationBarHidden(true)
        
