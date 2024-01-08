@@ -29,109 +29,112 @@ struct ContentView: View {
     }
 
     var body: some View {
-        VStack(spacing: 0) {
-            ZStack {
-                VStack {
-                   
-                    Text("Sheridan BNB")
-                        .font(.largeTitle)
-                        .foregroundColor(.white)
-                        .frame(maxWidth: .infinity)
-                        
-                        .padding(.top, 30)
-
-                    HStack {
-                        SearchBar(text: $searchText, onEditingChanged: { isEditing in
-                            if isEditing {
-                                displayViewModel.selectedWing = nil
-                            }
-                        })
-
-                        Button {
-                            isFilterViewPresented.toggle()
-                        } label: {
-                            Image(systemName: "slider.horizontal.3")
-                        }
-                        .offset(x: -20)
-                        .buttonStyle(WingButtonStyle())
-                        .sheet(isPresented: $isFilterViewPresented) {
-                            FilterView(isPresented: $isFilterViewPresented)
-                                .environmentObject(displayViewModel)
-                        }
-                    }
-                }
-                .padding(.bottom)
-            }
-            .background(Color("Blue"))
-
-            // This VStack will contain the list and will have the light green background
+        NavigationStack{
             VStack(spacing: 0) {
-                List {
-                    ForEach(filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }) { classroom in
-                        NavigationLink(destination: ClassroomDetailView(classroom: classroom), tag: classroom.classroomID, selection: $activeClassroomId) {
-                            Button(action: {
-                                self.activeClassroomId = classroom.classroomID
-                            }) {
-                                VStack(alignment: .leading) {
-                                    Text("\(classroom.classroomID)")
-        //                                .padding()
-                                        .background(Color.white)
-                                        .cornerRadius(10)
-                                        .font(.system(size: 22))
-                                        .fontWeight(.bold)
-                                        .foregroundColor(Color("Blue"))
-                                        .frame(maxWidth: .infinity, alignment: .center)
-                                    
-                                    Text(classroom.availableTime)
-                                        .font(.system(size: 18))
-                                        .foregroundColor(Color.green)
-                                        .fontWeight(.bold)
-                                        .frame(maxWidth: .infinity, alignment: .center)
+                ZStack {
+                    VStack {
+                       
+                        Text("Sheridan BNB")
+                            .font(.largeTitle)
+                            .foregroundColor(.white)
+                            .frame(maxWidth: .infinity)
+                            
+                            .padding(.top, 30)
+
+                        HStack {
+                            SearchBar(text: $searchText, onEditingChanged: { isEditing in
+                                if isEditing {
+                                    displayViewModel.selectedWing = nil
                                 }
-                                .padding(.vertical, 20)
-                                .background(Color.white)
-                                .cornerRadius(10)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 20)
-                                        .stroke(Color("Light Green"), lineWidth: 20)
-                                )
-                                .listRowInsets(EdgeInsets())
-                                .listRowSeparator(.hidden)
+                            })
+
+                            Button {
+                                isFilterViewPresented.toggle()
+                            } label: {
+                                Image(systemName: "slider.horizontal.3")
                             }
-                            .buttonStyle(PlainButtonStyle())
+                            .offset(x: -20)
+                            .buttonStyle(WingButtonStyle())
+                            .sheet(isPresented: $isFilterViewPresented) {
+                                FilterView(isPresented: $isFilterViewPresented)
+                                    .environmentObject(displayViewModel)
+                            }
                         }
-                        .listRowInsets(EdgeInsets())
-                        .listRowSeparator(.hidden)
-                        .listRowBackground(Color("Light Green"))
-                        .cornerRadius(10)
-//                        .listRowBackground(Color.white)
                     }
+                    .padding(.bottom)
                 }
-                .listStyle(PlainListStyle())
-                .padding(.horizontal, 15)
+                .background(Color("Blue"))
+
+                // This VStack will contain the list and will have the light green background
+                VStack(spacing: 0) {
+                    List {
+                        ForEach(filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }) { classroom in
+                            NavigationLink(destination: ClassroomDetailView(classroom: classroom), tag: classroom.classroomID, selection: $activeClassroomId) {
+                                Button(action: {
+                                    self.activeClassroomId = classroom.classroomID
+                                }) {
+                                    VStack(alignment: .leading) {
+                                        Text("\(classroom.classroomID)")
+            //                                .padding()
+                                            .background(Color.white)
+                                            .cornerRadius(10)
+                                            .font(.system(size: 22))
+                                            .fontWeight(.bold)
+                                            .foregroundColor(Color("Blue"))
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                        
+                                        Text(classroom.availableTime)
+                                            .font(.system(size: 18))
+                                            .foregroundColor(Color.green)
+                                            .fontWeight(.bold)
+                                            .frame(maxWidth: .infinity, alignment: .center)
+                                    }
+                                    .padding(.vertical, 20)
+                                    .background(Color.white)
+                                    .cornerRadius(10)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: 20)
+                                            .stroke(Color("Light Green"), lineWidth: 20)
+                                    )
+                                    .listRowInsets(EdgeInsets())
+                                    .listRowSeparator(.hidden)
+                                }
+                                .buttonStyle(PlainButtonStyle())
+                            }
+                            .listRowInsets(EdgeInsets())
+                            .listRowSeparator(.hidden)
+                            .listRowBackground(Color("Light Green"))
+                            .cornerRadius(10)
+    //                        .listRowBackground(Color.white)
+                        }
+                    }
+                    .listStyle(PlainListStyle())
+                    .padding(.horizontal, 15)
+                    .background(Color("Light Green"))
+                    .dismissKeyboardOnDrag()
+                    .simultaneousGesture(DragGesture().onChanged { _ in
+                        UIApplication.shared.dismissKeyboard()
+                    })
+    //                .onTapGesture {
+    //                    UIApplication.shared.dismissKeyboard()
+    //                }
+                }
+                .padding(.top, 15)
                 .background(Color("Light Green"))
-                .dismissKeyboardOnDrag()
-                .simultaneousGesture(DragGesture().onChanged { _ in
-                    UIApplication.shared.dismissKeyboard()
-                })
-//                .onTapGesture {
-//                    UIApplication.shared.dismissKeyboard()
-//                }
             }
-            .padding(.top, 15)
-            .background(Color("Light Green"))
-        }
-        .edgesIgnoringSafeArea(.bottom)
-        .onAppear {
-            displayViewModel.fetchClassroomsFromFirestore()
-        }
-        
-        .onChange(of: displayViewModel.selectedWing) {
-            displayViewModel.fetchFilteredClassrooms(for: displayViewModel.selectedWing)
-            displayViewModel.updateAvailableTimes()
-        }
-        .onChange(of: searchText) {
-            displayViewModel.updateAvailableTimes()
+            .edgesIgnoringSafeArea(.bottom)
+            //END HERE
+            .onAppear {
+                displayViewModel.fetchClassroomsFromFirestore()
+            }
+            
+            .onChange(of: displayViewModel.selectedWing) {
+                displayViewModel.fetchFilteredClassrooms(for: displayViewModel.selectedWing)
+                displayViewModel.updateAvailableTimes()
+            }
+            .onChange(of: searchText) {
+                displayViewModel.updateAvailableTimes()
+            }
         }
     }
 }

@@ -11,6 +11,7 @@ struct MainEntryView: View {
                 Color("Blue")
                     .edgesIgnoringSafeArea(.all)
                 
+                //Wave decoration starts
                 Wave(phase: phase, strength: 20, frequency: 30)
                     .stroke(Color("Orange"), lineWidth: 45)
                     .rotationEffect(.degrees(230))
@@ -37,7 +38,8 @@ struct MainEntryView: View {
                     .rotationEffect(.degrees(230))
                     .frame(width: 1000)
                     .offset(x:210, y: -335)
-            
+             //Wave ends
+                
                 VStack {
                                 Spacer()
                                 Text("Find\nan empty \nclassroom \nat Sheridan")
@@ -70,8 +72,10 @@ struct MainEntryView: View {
                                 }
                                 Spacer()
                             }
+
                         }
                         .navigationBarHidden(true)
+       
                     }
                 }
 

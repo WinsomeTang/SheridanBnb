@@ -9,51 +9,103 @@ import SwiftUI
 
 struct ClassroomDetailView: View {
     let classroom: IdentifiableClassroom
-
+    @State private var phase = 2.5
+    @EnvironmentObject var displayViewModel: DisplayViewModel
+    
     var body: some View {
-        ScrollView {
-            VStack {
-                Text(classroom.classroomID)
-                    .font(.largeTitle)
-                    .fontWeight(.bold)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding()
-                    .background(LinearGradient(gradient: Gradient(colors: [Color.blue, Color.purple]), startPoint: .leading, endPoint: .trailing))
-                    .foregroundColor(.white)
-                    .cornerRadius(10)
-
-                // Schedule Section
-                VStack(alignment: .leading) {
-                    Text("Today \(DateFormatter.localizedString(from: Date(), dateStyle: .full, timeStyle: .none))")
-                        .font(.title3)
-                        .fontWeight(.semibold)
-                        .padding(.vertical)
-
-                    ForEach(classroom.classroom.schedule[DayOfWeek.from(date: Date())] ?? [], id: \.id) { courseTime in
-                        HStack {
-                            Capsule()
-                                .frame(width: 8, height: 40)
-                                .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color.blue)
-                            VStack(alignment: .leading) {
-                                Text(courseTime.time)
-                                    .fontWeight(.bold)
-                                    .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color.primary)
-                                Text("Course Code: \(courseTime.courseCode)")
-                                    .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color.primary)
+        ZStack{
+            Color("Blue")
+                .edgesIgnoringSafeArea(.all)
+            //Waves positioned on top right corner
+            Wave(phase: phase, strength: 22, frequency: 50)
+                .stroke(Color("Orange"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: 165, y: -325)
+            Wave(phase: 1.0, strength: 22, frequency: 50)
+                .stroke(Color("Light Green"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: 220, y: -305)
+            Wave(phase: 1.0, strength: 22, frequency: 50)
+                .stroke(Color("Aqua"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: 390, y: -225)
+            Wave(phase: 1.0, strength: 22, frequency: 50)
+                .stroke(Color("Aqua"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: 390, y: -225)
+            Wave(phase: 1.0, strength: 22, frequency: 50)
+                .stroke(Color("Blue"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: 390, y: -255)
+            ScrollView {
+                VStack {
+                    Text(classroom.classroomID)
+                        .font(.largeTitle)
+                        .fontWeight(.bold)
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding()
+                        .foregroundColor(.white)
+                        .cornerRadius(10)
+                    
+                    // Schedule Section
+                    VStack(alignment: .leading) {
+                        Text("Today \(DateFormatter.localizedString(from: Date(), dateStyle: .full, timeStyle: .none))")
+                            .font(.title3)
+                            .fontWeight(.semibold)
+                            .padding(.vertical, 5)
+                        
+                        ForEach(classroom.classroom.schedule[DayOfWeek.from(date: Date())] ?? [], id: \.id) { courseTime in
+                            HStack {
+                                Capsule()
+                                    .frame(width: 8, height: 40)
+                                    .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color("Aqua"))
+                                VStack(alignment: .leading) {
+                                    Text(courseTime.time)
+                                        .fontWeight(.bold)
+                                        .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color.gray : Color("Aqua"))
+                                    Text("Course Code: \(courseTime.courseCode)")
+                                        .foregroundColor(isClassPast(courseTime: courseTime.time) ? Color("Light Gray") :  Color("Blue"))
+                                }
                             }
+                            .padding(.vertical, 4)
                         }
-                        .padding(.vertical, 4)
                     }
+                    .padding()
+                    .background(Color.white)
+                    .cornerRadius(10)
+                   
                 }
-
-                .padding()
-                .background(Color.gray.opacity(0.1))
-                .cornerRadius(10)
-                .padding()
             }
+            .navigationBarTitleDisplayMode(.inline)
+            
+            //Waves positioned at bottom left corner
+            Wave(phase: phase, strength: 22, frequency: 45)
+                .stroke(Color("Orange"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: -165, y:255)
+            Wave(phase: 1.0, strength: 22, frequency: 45)
+                .stroke(Color("Light Green"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: -20, y: 415)
+            Wave(phase: 1.0, strength: 22, frequency: 45)
+                .stroke(Color("Aqua"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: -50, y: 430)
+
+            Wave(phase: 1.0, strength: 22, frequency: 45)
+                .stroke(Color("Blue"), lineWidth: 45)
+                .rotationEffect(.degrees(219))
+                .frame(width: 1400)
+                .offset(x: -50, y: 450)
         }
-        .navigationTitle("Classroom \(classroom.classroomID)")
-        .navigationBarTitleDisplayMode(.inline)
     }
 }
 
