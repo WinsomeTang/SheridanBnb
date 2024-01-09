@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var searchText: String = ""
     @State private var isFilterViewPresented = false
     @State private var selectedWingIndex: Int = 0
+    @State private var activeClassroomId: String? = nil
     
     var filteredClassrooms: [IdentifiableClassroom] {
         if searchText.isEmpty {
@@ -67,31 +68,43 @@ struct ContentView: View {
             VStack(spacing: 0) {
                 List {
                     ForEach(filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }) { classroom in
-                        VStack(alignment: .leading) {
-                            Text("\(classroom.classroomID)")
-//                                .padding()
+                        NavigationLink(destination: ClassroomDetailView(classroom: classroom), tag: classroom.classroomID, selection: $activeClassroomId) {
+                            Button(action: {
+                                self.activeClassroomId = classroom.classroomID
+                            }) {
+                                VStack(alignment: .leading) {
+                                    Text("\(classroom.classroomID)")
+        //                                .padding()
+                                        .background(Color.white)
+                                        .cornerRadius(10)
+                                        .font(.system(size: 22))
+                                        .fontWeight(.bold)
+                                        .foregroundColor(Color("Blue"))
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                    
+                                    Text(classroom.availableTime)
+                                        .font(.system(size: 18))
+                                        .foregroundColor(Color.green)
+                                        .fontWeight(.bold)
+                                        .frame(maxWidth: .infinity, alignment: .center)
+                                }
+                                .padding(.vertical, 20)
                                 .background(Color.white)
                                 .cornerRadius(10)
-                                .font(.system(size: 22))
-                                .fontWeight(.bold)
-                                .foregroundColor(Color("Blue"))
-                                .frame(maxWidth: .infinity, alignment: .center)
-                            
-                            Text(classroom.availableTime)
-                                .font(.system(size: 18))
-                                .foregroundColor(Color.green)
-                                .fontWeight(.bold)
-                                .frame(maxWidth: .infinity, alignment: .center)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 20)
+                                        .stroke(Color("Light Green"), lineWidth: 20)
+                                )
+                                .listRowInsets(EdgeInsets())
+                                .listRowSeparator(.hidden)
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
-                        .padding(.vertical, 20)
-                        .background(Color.white)
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 20)
-                                .stroke(Color("Light Green"), lineWidth: 20)
-                        )
                         .listRowInsets(EdgeInsets())
                         .listRowSeparator(.hidden)
+                        .listRowBackground(Color("Light Green"))
+                        .cornerRadius(10)
+//                        .listRowBackground(Color.white)
                     }
                 }
                 .listStyle(PlainListStyle())
