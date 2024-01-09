@@ -123,17 +123,23 @@ struct ClassroomRowView: View {
                             .font(.system(size: 22))
                             .fontWeight(.bold)
                             .foregroundColor(Color("BlueTheme"))
-                        //switch statement
-                        Image(systemName: "lock.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(Color.red)
-//                            .offset(y:-3)
-                        Image(systemName: "person.text.rectangle.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(Color.orange)
-                        Image(systemName: "lock.open.fill")
-                            .font(.system(size: 24))
-                            .foregroundColor(Color.blue)
+                        // Insert switch statement to choose icon
+                        switch classroom.classroom.attributes["doorStatus"] {
+                        case .some(.string("OPEN")):
+                            Image(systemName: "lock.open.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(Color.blue)
+                        case .some(.string("LOCKED")):
+                            Image(systemName: "lock.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(Color.red)
+                        case .some(.string("KEYCARD REQUIRED")):
+                            Image(systemName: "person.text.rectangle.fill")
+                                .font(.system(size: 24))
+                                .foregroundColor(Color.orange)
+                        default:
+                            EmptyView() // Handles unexpected cases
+                        }
                     }
                     .multilineTextAlignment(.center)
                     Text(classroom.availableTime)
