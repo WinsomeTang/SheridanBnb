@@ -42,9 +42,28 @@ struct ClassroomDetailView: View {
                         .fontWeight(.bold)
                         .frame(maxWidth: .infinity, alignment: .center)
                         .padding()
+                        .padding(.top, 10)
                         .foregroundColor(.white)
                         .cornerRadius(10)
+                    // the features of selected classroom
                     
+                    ScrollView{
+                        HStack{
+                            VStack{
+                                Image(systemName: "lock.fill")
+                                    .foregroundColor(.white)
+                            }
+                            Image(systemName: "door.left.hand.closed")
+                                .foregroundColor(.white)
+                            Image(systemName: "poweroutlet.type.a.fill")
+                                .foregroundColor(.white)
+                            Image(systemName: "lightbulb.max.fill")
+                                .foregroundColor(.white)
+                            Image(systemName: "hifispeaker.fill")
+                                .foregroundColor(.white)
+                                
+                        }
+                    }
                     // Schedule Section
                     VStack(alignment: .leading) {
                         Text("Today \(DateFormatter.localizedString(from: Date(), dateStyle: .full, timeStyle: .none))")

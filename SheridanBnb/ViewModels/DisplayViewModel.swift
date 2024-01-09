@@ -8,6 +8,7 @@ class DisplayViewModel: ObservableObject {
     @Published var selectedWing: String? {
         didSet {
             fetchFilteredClassrooms(for: selectedWing)
+            updateAvailableTimes() //Added to fix "Calculating..." bug
         }
     }
     @Published var searchText = ""
@@ -67,7 +68,7 @@ class DisplayViewModel: ObservableObject {
         let currentTime = dateFormatter.string(from: currentDate)
 
         let db = Firestore.firestore()
-        db.collection("Winter2024").document("wings").getDocument { [weak self] document, error in
+        db.collection("test_winter2024").document("wings").getDocument { [weak self] document, error in
             if let error = error {
                 print("Error fetching document: \(error.localizedDescription)")
                 return

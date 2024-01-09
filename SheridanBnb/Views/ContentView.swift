@@ -90,7 +90,6 @@ struct ContentView: View {
                         .background(Color("LightGreenTheme"))
                         .dismissKeyboardOnDrag()
                     }
-                    .padding(.top, 15)
                     .background(Color("LightGreenTheme"))
                 }
                 .edgesIgnoringSafeArea(.bottom)
@@ -119,11 +118,24 @@ struct ClassroomRowView: View {
         NavigationLink(destination: ClassroomDetailView(classroom: classroom)) {
             HStack {
                 VStack(alignment: .center) {
-                    Text("\(classroom.classroomID)")
-                        .font(.system(size: 22))
-                        .fontWeight(.bold)
-                        .foregroundColor(Color("BlueTheme"))
-                    
+                    HStack{
+                        Text("\(classroom.classroomID)")
+                            .font(.system(size: 22))
+                            .fontWeight(.bold)
+                            .foregroundColor(Color("BlueTheme"))
+                        //switch statement
+                        Image(systemName: "lock.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(Color.red)
+//                            .offset(y:-3)
+                        Image(systemName: "person.text.rectangle.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(Color.orange)
+                        Image(systemName: "lock.open.fill")
+                            .font(.system(size: 24))
+                            .foregroundColor(Color.blue)
+                    }
+                    .multilineTextAlignment(.center)
                     Text(classroom.availableTime)
                         .font(.system(size: 18))
                         .foregroundColor(Color.green)
@@ -134,6 +146,7 @@ struct ClassroomRowView: View {
                 .frame(maxWidth: .infinity, alignment: .center)
 
                 Spacer()
+
             }
             .background(Color.white)
             .cornerRadius(10)
@@ -141,6 +154,8 @@ struct ClassroomRowView: View {
                 RoundedRectangle(cornerRadius: 10)
                     .stroke(Color("AquaTheme"), lineWidth: 2.5)
             )
+            
+
         }
         .buttonStyle(PlainButtonStyle())
         .foregroundColor(Color("BlueTheme"))
