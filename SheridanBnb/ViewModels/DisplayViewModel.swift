@@ -74,19 +74,31 @@ class DisplayViewModel: ObservableObject {
         }
 
         let currentTimeDate = DateFormatter.hourMinuteFormatter.date(from: currentTime) ?? Date()
-        let sortedSchedule = daySchedule.sorted { $0.time < $1.time }
+        for courseTime in daySchedule.sorted(by: { $0.time < $1.time }) {
+            let timeRange = courseTime.time.components(separatedBy: " - ")
+            guard timeRange.count == 2,
+                  let startTime = DateFormatter.hourMinuteFormatter.date(from: timeRange[0]),
+                  let endTime = DateFormatter.hourMinuteFormatter.date(from: timeRange[1]) else {
+                continue
+            }
 
-        for courseTime in sortedSchedule {
-            if let startTime = DateFormatter.hourMinuteFormatter.date(from: courseTime.time.components(separatedBy: " - ").first ?? "") {
-                if startTime > currentTimeDate {
-                    let availableTime = Calendar.current.dateComponents([.hour, .minute], from: currentTimeDate, to: startTime)
-                    return "Free for \(availableTime.hour ?? 0)h \(availableTime.minute ?? 0)m"
-                }
+            if currentTimeDate >= startTime && currentTimeDate <= endTime {
+                // Classroom is currently occupied
+                let timeLeft = Calendar.current.dateComponents([.hour, .minute], from: currentTimeDate, to: endTime)
+                let timeLeftFormatted = String(format: "%02d:%02d", timeLeft.hour ?? 0, timeLeft.minute ?? 0)
+                return "Occupied by: \(courseTime.courseCode) | Free in: \(timeLeftFormatted)"
+            } else if currentTimeDate < startTime {
+                // Classroom is currently free
+                let timeUntilNextClass = Calendar.current.dateComponents([.hour, .minute], from: currentTimeDate, to: startTime)
+                let timeUntilNextClassFormatted = String(format: "%02d:%02d", timeUntilNextClass.hour ?? 0, timeUntilNextClass.minute ?? 0)
+                return "Free for: \(timeUntilNextClassFormatted)"
             }
         }
-
+        // No more classes for the day
         return "No more classes today"
     }
+
+
     
     func updateAvailableTimes() {
         let currentDate = Date()

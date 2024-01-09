@@ -141,12 +141,11 @@ struct ClassroomRowView: View {
                             EmptyView() // Handles unexpected cases
                         }
                     }
-                    
                     .multilineTextAlignment(.center)
                     Text(classroom.availableTime)
-                        .font(.system(size: 18))
-                        .foregroundColor(Color.green)
-
+                        .font(.system(size: 14))
+                        // Change color based on whether the room is occupied
+                        .foregroundColor(classroom.availableTime.contains("Occupied by") ? Color.red : Color.green)
                         .fontWeight(.bold)
                 }
                 .padding(13)
