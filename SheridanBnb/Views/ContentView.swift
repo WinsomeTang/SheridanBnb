@@ -141,6 +141,7 @@ struct ClassroomRowView: View {
                             EmptyView() // Handles unexpected cases
                         }
                     }
+                    
                     .multilineTextAlignment(.center)
                     Text(classroom.availableTime)
                         .font(.system(size: 18))

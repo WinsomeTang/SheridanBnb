@@ -12,7 +12,61 @@ class DisplayViewModel: ObservableObject {
         }
     }
     @Published var searchText = ""
-    
+    @Published var excludeLocked: Bool = false
+    @Published var excludeKeycardRequired: Bool = false
+    @Published var showOccupiedRooms: Bool = false
+    @Published var showEverything: Bool = false
+    @Published var selectedWings: [String] = [] // Changed to handle multiple wing selections
+
+
+    func applyFilters() {
+        // If "Show EVERYTHING" is toggled, ignore other filters.
+        if showEverything {
+            self.excludeLocked = false
+            self.excludeKeycardRequired = false
+            self.showOccupiedRooms = true
+        } else {
+            // The current filter settings are already updated since they are bound directly to the view.
+        }
+
+        // Perform the filtering based on the current state.
+        var filteredClassrooms = self.wings.flatMap { wing in
+            wing.classrooms.compactMap { classroomID, classroom -> IdentifiableClassroom? in
+                // Determine if the classroom is currently occupied.
+                let isOccupied = classroom.schedule[DateFormatter().string(from: Date())]?.isClassroomOccupied(currentTime: DateFormatter.hourMinuteFormatter.string(from: Date())) ?? false
+                
+                // Apply the "Show EVERYTHING" filter.
+                if showEverything {
+                    return IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom)
+                }
+                // Otherwise, apply the specific filters.
+                else {
+                    if self.excludeLocked && classroom.attributes["doorStatus"] == .string("LOCKED") {
+                        return nil
+                    }
+                    if self.excludeKeycardRequired && classroom.attributes["doorStatus"] == .string("KEYCARD REQUIRED") {
+                        return nil
+                    }
+                    if !self.showOccupiedRooms && isOccupied {
+                        return nil
+                    }
+                    // If none of the exclusion conditions are met, the classroom is included.
+                    return IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom)
+                }
+            }
+        }
+        
+        // Sort and update the available classrooms if "Show EVERYTHING" is not selected.
+        filteredClassrooms = filteredClassrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }
+        
+        // Update the main thread with the new filtered classrooms.
+        DispatchQueue.main.async {
+            self.filterAndSortAvailableClassrooms()
+            self.updateAvailableTimes()
+        }
+    }
+
+
     
     func calculateAvailableTimeFor(classroom: Classroom, on day: String, at currentTime: String) -> String {
         guard let daySchedule = classroom.schedule[day], !daySchedule.isEmpty else {
@@ -124,7 +178,7 @@ class DisplayViewModel: ObservableObject {
     }
 
 
-    func filterAndSortAvailableClassrooms(wingID: String?) -> [IdentifiableClassroom] {
+    func filterAndSortAvailableClassrooms() {
         let currentDate = Date()
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "EEEE" // for the day of the week
@@ -133,20 +187,41 @@ class DisplayViewModel: ObservableObject {
         dateFormatter.dateFormat = "HH:mm" // for the current time
         let currentTime = dateFormatter.string(from: currentDate)
         
+        // Check if "ALL" is selected or if no wings are selected, then show all classrooms
+        let isShowingAll = selectedWings.contains("ALL") || selectedWings.isEmpty
+        
         var classrooms = [IdentifiableClassroom]()
         
         for wing in wings {
-            guard wingID == nil || wing.id == wingID else { continue }
-            for (classroomID, classroom) in wing.classrooms {
-                let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
-                if isAvailable || wingID == nil { // if "All" is selected or the classroom is available
-                    classrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom))
+            // If showing all wings, or if the current wing is in the selected wings
+            if isShowingAll || selectedWings.contains(wing.id) {
+                for (classroomID, classroom) in wing.classrooms {
+                    let isAvailable = !(classroom.schedule[dayString]?.isClassroomOccupied(currentTime: currentTime) ?? false)
+                    
+                    if isAvailable || showOccupiedRooms {
+                        if showEverything {
+                            classrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom))
+                        } else {
+                            if !(excludeLocked && classroom.attributes["doorStatus"] == .string("LOCKED")) &&
+                                !(excludeKeycardRequired && classroom.attributes["doorStatus"] == .string("KEYCARD REQUIRED")) {
+                                classrooms.append(IdentifiableClassroom(wingID: wing.id, classroomID: classroomID, classroom: classroom))
+                            }
+                        }
+                    }
                 }
             }
         }
         
-        return classrooms.sorted { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }
+        // Sort the classrooms by ID
+        classrooms.sort { $0.classroomID.localizedStandardCompare($1.classroomID) == .orderedAscending }
+        
+        // Update the main thread with the new filtered classrooms.
+        DispatchQueue.main.async {
+            self.availableClassrooms = classrooms
+            self.updateAvailableTimes()
+        }
     }
+
 
     
     func filterAvailableClassrooms(for wingID: String? = nil) -> [IdentifiableClassroom] {
