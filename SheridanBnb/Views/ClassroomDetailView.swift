@@ -4,7 +4,6 @@ struct ClassroomDetailView: View {
     let classroom: IdentifiableClassroom
     @State private var phase = 2.5
     @EnvironmentObject var displayViewModel: DisplayViewModel
-    
     var body: some View {
         ZStack{
             Color("BlueTheme")
@@ -46,24 +45,170 @@ struct ClassroomDetailView: View {
                         .foregroundColor(.white)
                         .cornerRadius(10)
                     // the features of selected classroom
-                    
-                    ScrollView{
-                        HStack{
+                    Spacer()
+                    ScrollView(.horizontal){
+                        HStack(spacing: 20){
+                            Spacer()
+                                .frame(width: 10)
+//MARK: - Lock Access Status
                             VStack{
-                                Image(systemName: "lock.fill")
-                                    .foregroundColor(.white)
+                                switch
+                                classroom.classroom.attributes["doorStatus"]{
+                                case .some(.string("LOCKED")):
+                                    Image(systemName: "lock.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("Locked")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                        .padding(.horizontal, 10)
+                                    
+                                case .some(.string("KEYCARD REQUIRED")):
+                                    Image(systemName: "person.text.rectangle.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("Need\nKeycard")
+                                        .font(.system(size: 15))
+                                        .multilineTextAlignment(.center)
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                        .padding(.horizontal, 10)
+                                    
+                                case .some(.string("OPEN")):
+                                    Image(systemName: "lock.open.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("Open")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                        .padding(.horizontal, 10)
+                                default:
+                                    EmptyView()
+                                }
                             }
-                            Image(systemName: "door.left.hand.closed")
-                                .foregroundColor(.white)
-                            Image(systemName: "poweroutlet.type.a.fill")
-                                .foregroundColor(.white)
-                            Image(systemName: "lightbulb.max.fill")
-                                .foregroundColor(.white)
-                            Image(systemName: "hifispeaker.fill")
-                                .foregroundColor(.white)
-                                
-                        }
+                            .padding(.vertical, 22)
+                           
+                            .background(Color("BlueTheme"))
+                            .cornerRadius(40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
+                            )
+//MARK: - Can Door lock?
+                            VStack{
+                                switch classroom.classroom.attributes["canDoorLock"]{
+                                case .some(.boolean(true)):
+                                    Image(systemName: "door.left.hand.closed")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("Can\nLock")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 8)
+                                        .padding(.horizontal, 10)
+                                case .some(.boolean(false)):
+                                    Image(systemName: "door.left.hand.open")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("Can't\nLock")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 8)
+                                        .padding(.horizontal, 10)
+                                default:
+                                    EmptyView()
+                                }
+                            }
+                            .padding(.vertical, 20)
+    
+                            .background(Color("BlueTheme"))
+                            .cornerRadius(40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
+                            )
+//MARK: - Power Outlet Count
+                            VStack{
+                                if let powerOutletValue = classroom.classroom.attributes["outletCount"], case .integer(let count) = powerOutletValue {
+                                    Image(systemName: "poweroutlet.type.a.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("\(count)")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 12)
+                                        .padding(.horizontal, 20)
+                                } else {
+                                    EmptyView()
+                                }
+                            }
+                            .padding(.vertical, 24)
+                            
+                            .background(Color("BlueTheme"))
+                            .cornerRadius(40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
+                            )
+//MARK: - Lighting Rating
+                            VStack{
+                                if let lightRatingValue = classroom.classroom.attributes["lightingRating"], case .integer(let lightRate) = lightRatingValue {
+                                    Image(systemName: "lightbulb.max.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("\(lightRate)")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 12)
+                                        .padding(.horizontal, 10)
+                                } else {
+                                    EmptyView()
+                                }
+                            }
+                            .padding(.vertical, 20)
+                            
+                            .background(Color("BlueTheme"))
+                            .cornerRadius(40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
+                            )
+//MARK: - Speaker Rating
+                            VStack{
+                                if let speakerRatingValue = classroom.classroom.attributes["speakerRating"], case .string(let speakerRate) = speakerRatingValue {
+                                    Image(systemName: "hifispeaker.fill")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("\(speakerRate)")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 12)
+                                        .padding(.horizontal, 10)
+                                } else {
+                                    EmptyView()
+                                }
+                            }
+                            .padding(.vertical, 22)
+                            
+                            .background(Color("BlueTheme"))
+                            .cornerRadius(40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
+                            )
+                        }//HStack for features section
+                        .padding(.vertical, 20)
+                        .padding(.horizontal, 500)
+                        .background(
+                            LinearGradient(gradient: Gradient(colors: [Color("OrangeTheme"), Color("LightGreenTheme"), Color("AquaTheme")]), startPoint: .leading, endPoint: .trailing))
+                            
                     }
+                    .padding(.bottom, 15)
                     // Schedule Section
                     VStack(alignment: .leading) {
                         Text("Today \(DateFormatter.localizedString(from: Date(), dateStyle: .full, timeStyle: .none))")
@@ -91,11 +236,9 @@ struct ClassroomDetailView: View {
                     .padding()
                     .background(Color.white)
                     .cornerRadius(10)
-                   
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
-            
             //Waves positioned at bottom left corner
             Wave(phase: phase, strength: 22, frequency: 45)
                 .stroke(Color("OrangeTheme"), lineWidth: 45)
@@ -112,7 +255,6 @@ struct ClassroomDetailView: View {
                 .rotationEffect(.degrees(219))
                 .frame(width: 1400)
                 .offset(x: -50, y: 430)
-
             Wave(phase: 1.0, strength: 22, frequency: 45)
                 .stroke(Color("BlueTheme"), lineWidth: 45)
                 .rotationEffect(.degrees(219))
@@ -138,10 +280,10 @@ struct ClassroomDetailView: View {
 //            }
 //        }
 //        """.data(using: .utf8)!
-//        
+//
 //        // Decoding the mock JSON to create a Classroom instance
 //        let mockClassroom = try! JSONDecoder().decode(Classroom.self, from: mockClassroomJSON)
-//        
+//
 //        ClassroomDetailView(classroom: IdentifiableClassroom(wingID: "G", classroomID: "201", classroom: mockClassroom))
 //    }
 //}
