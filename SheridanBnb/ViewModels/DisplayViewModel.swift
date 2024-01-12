@@ -134,7 +134,8 @@ class DisplayViewModel: ObservableObject {
         let currentTime = dateFormatter.string(from: currentDate)
 
         let db = Firestore.firestore()
-        db.collection("test_winter2024").document("wings").getDocument { [weak self] document, error in
+        //collection without classtype attribute: test_winter2024
+        db.collection("Winter2024_attr").document("wings").getDocument { [weak self] document, error in
             if let error = error {
                 print("Error fetching document: \(error.localizedDescription)")
                 return

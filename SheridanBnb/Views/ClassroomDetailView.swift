@@ -50,11 +50,53 @@ struct ClassroomDetailView: View {
                         HStack(spacing: 20){
                             Spacer()
                                 .frame(width: 10)
+                            
+//MARK: - Room Type
+                            VStack{
+                                switch
+                                classroom.classroom.attributes["roomType"]{
+                                case .some(.string("CLASSROOM")):
+                                    Image("classroom.filled")
+                                        .frame(width: 30, height: 30)
+
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("Classroom")
+                                        .font(.system(size: 15))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 5)
+                                        .padding(.horizontal, 10)
+                                    
+                                case .some(.string("LAB")):
+                                    Image(systemName: "pc")
+                                        .font(.system(size: 24))
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                    Text("Lab")
+                                        .font(.system(size: 15))
+                                        .multilineTextAlignment(.center)
+                                        .foregroundColor(.white)
+                                        .padding(.top, 10)
+                                        .padding(.horizontal, 10)
+                                default:
+                                    EmptyView()
+                                }
+                            }
+                            .padding(.vertical, 22)
+                            .frame(height: 100)
+                            .background(Color("BlueTheme"))
+                            .cornerRadius(40)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
+                            )
+
+                            
 //MARK: - Lock Access Status
                             VStack{
                                 switch
                                 classroom.classroom.attributes["doorStatus"]{
                                 case .some(.string("LOCKED")):
+                                    
                                     Image(systemName: "lock.fill")
                                         .font(.system(size: 24))
                                         .foregroundColor(.white)
@@ -92,7 +134,7 @@ struct ClassroomDetailView: View {
                                 }
                             }
                             .padding(.vertical, 22)
-                           
+                            .frame(height: 100)
                             .background(Color("BlueTheme"))
                             .cornerRadius(40)
                             .overlay(
@@ -125,8 +167,8 @@ struct ClassroomDetailView: View {
                                     EmptyView()
                                 }
                             }
-                            .padding(.vertical, 20)
-    
+                            .padding(.vertical, 22)
+                            .frame(height: 100)
                             .background(Color("BlueTheme"))
                             .cornerRadius(40)
                             .overlay(
@@ -135,10 +177,21 @@ struct ClassroomDetailView: View {
 //MARK: - Power Outlet Count
                             VStack{
                                 if let powerOutletValue = classroom.classroom.attributes["outletCount"], case .integer(let count) = powerOutletValue {
-                                    Image(systemName: "poweroutlet.type.a.fill")
-                                        .font(.system(size: 24))
-                                        .foregroundColor(.white)
-                                        .padding(.top, 10)
+                                    VStack{
+                                        Image(systemName: "poweroutlet.type.a.fill")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(.white)
+                                            .padding(.bottom, 2)
+                                        Image(systemName: "poweroutlet.type.a.fill")
+                                            .font(.system(size: 14))
+                                            .foregroundColor(.white)
+                                    }
+                                        .cornerRadius(10)
+                                        .padding(.vertical, 3)
+                                        .padding(.horizontal, 3)
+                                        .overlay(
+                                            RoundedRectangle(cornerRadius: 10).stroke(Color.white, lineWidth: 2)
+                                        )
                                     Text("\(count)")
                                         .font(.system(size: 15))
                                         .foregroundColor(.white)
@@ -148,8 +201,8 @@ struct ClassroomDetailView: View {
                                     EmptyView()
                                 }
                             }
-                            .padding(.vertical, 24)
-                            
+                            .padding(.vertical, 22)
+                            .frame(height: 100)
                             .background(Color("BlueTheme"))
                             .cornerRadius(40)
                             .overlay(
@@ -171,36 +224,47 @@ struct ClassroomDetailView: View {
                                     EmptyView()
                                 }
                             }
-                            .padding(.vertical, 20)
-                            
+                            .padding(.vertical, 22)
+                            .frame(height: 100)
                             .background(Color("BlueTheme"))
                             .cornerRadius(40)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
                             )
 //MARK: - Speaker Rating
-                            VStack{
-                                if let speakerRatingValue = classroom.classroom.attributes["speakerRating"], case .string(let speakerRate) = speakerRatingValue {
-                                    Image(systemName: "hifispeaker.fill")
-                                        .font(.system(size: 24))
-                                        .foregroundColor(.white)
-                                        .padding(.top, 10)
-                                    Text("\(speakerRate)")
-                                        .font(.system(size: 15))
-                                        .foregroundColor(.white)
-                                        .padding(.top, 12)
-                                        .padding(.horizontal, 10)
-                                } else {
-                                    EmptyView()
+                            VStack {
+                                Image(systemName: "hifispeaker.fill")
+                                    .font(.system(size: 24))
+                                    .foregroundColor(.white)
+                                    .padding(.top, 10)
+
+                                // Attempt to display the speaker rating as an integer or a string
+                                if let speakerRatingValue = classroom.classroom.attributes["speakerRating"] {
+                                    if case .integer(let speakerRate) = speakerRatingValue {
+                                        // If it's an integer, use this Text view
+                                        Text("\(speakerRate)")
+                                            .font(.system(size: 15))
+                                            .foregroundColor(.white)
+                                            .padding(.top, 12)
+                                            .padding(.horizontal, 10)
+                                    } else if case .string(let speakerRate) = speakerRatingValue {
+                                        // If it's a string, use this Text view
+                                        Text(speakerRate)
+                                            .font(.system(size: 15))
+                                            .foregroundColor(.white)
+                                            .padding(.top, 12)
+                                            .padding(.horizontal, 10)
+                                    }
                                 }
                             }
                             .padding(.vertical, 22)
-                            
+                            .frame(height: 100)
                             .background(Color("BlueTheme"))
                             .cornerRadius(40)
                             .overlay(
                                 RoundedRectangle(cornerRadius: 40).stroke(Color("BlueTheme"), lineWidth: 1)
                             )
+
                         }//HStack for features section
                         .padding(.vertical, 20)
                         .padding(.horizontal, 500)
