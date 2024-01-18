@@ -10,9 +10,9 @@
 </p>
 
 <p align="row">
-<img src= "https://github.com/WinsomeTang/SheridanBnb/assets/95314806/404e7433-228a-4fb0-9e2c-660323a43664" width="300" >
-<img src= "https://github.com/WinsomeTang/SheridanBnb/assets/95314806/76edc2f0-d9f0-41de-b89e-a9dad4000326" width="300" >
-<img src= "https://github.com/WinsomeTang/SheridanBnb/assets/95314806/b75d42a8-8441-44c9-96b1-c465065d4c2a" width="300" >
+<img src= "https://github.com/WinsomeTang/SheridanBnb/assets/95314806/404e7433-228a-4fb0-9e2c-660323a43664" width="250" >
+<img src= "https://github.com/WinsomeTang/SheridanBnb/assets/95314806/76edc2f0-d9f0-41de-b89e-a9dad4000326" width="250" >
+<img src= "https://github.com/WinsomeTang/SheridanBnb/assets/95314806/b75d42a8-8441-44c9-96b1-c465065d4c2a" width="250" >
 </p>
 
 ## Features!
